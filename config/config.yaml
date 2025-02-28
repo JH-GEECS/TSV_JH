@@ -17,9 +17,14 @@ port: 12355
 n_eval_points: 31
 device: "cuda"
 batch_size: 32
-data_location: "datasets"
-model_location: "models/checkpoints"
+data_location: "/workspace/data"  # 여기서 변경
+model_location: "/workspace/weight/checkpoints"  # 여기서 변경
 save_subfolder: ""
+
+# compatibility coding
+TA_mode: true
+save_weight: false
+do_k_serach: false
 
 wandb:
   project: task-vectors
