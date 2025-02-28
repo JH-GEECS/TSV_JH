@@ -2,13 +2,15 @@ import open_clip
 import torch
 
 from src.utils import utils
-from src.utils.variables_and_paths import CACHEDIR, MODELS, OPENCLIP_CACHEDIR
+from src.utils.variables_and_paths import CACHEDIR, MODELS, OPENCLIP_CACHEDIR, is_TA_mode
 
 
 class ImageEncoder(torch.nn.Module):
     def __init__(self, model_name: str, keep_lang=False):
         super().__init__()
-        assert model_name in MODELS, f"Invalid model name: {model_name}. Valid models are: {MODELS}"
+        assert (
+            model_name in MODELS
+        ), f"Invalid model name: {model_name}. Valid models are: {MODELS}"
 
         if "__pretrained__" in model_name:
             name, pretrained = model_name.split("__pretrained__")
@@ -22,7 +24,9 @@ class ImageEncoder(torch.nn.Module):
             self.model,
             self.train_preprocess,
             self.val_preprocess,
-        ) = open_clip.create_model_and_transforms(name, pretrained=pretrained, cache_dir=OPENCLIP_CACHEDIR)
+        ) = open_clip.create_model_and_transforms(
+            name, pretrained=pretrained, cache_dir=OPENCLIP_CACHEDIR
+        )
 
         self.cache_dir = CACHEDIR
 

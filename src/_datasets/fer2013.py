@@ -19,7 +19,9 @@ class CustomFER2013Dataset(Dataset):
 
     def __getitem__(self, idx):
         sample = self.hf_dataset[idx]
-        image = Image.open(io.BytesIO(sample["img_bytes"])).convert("L")  # Convert to PIL image
+        image = Image.open(io.BytesIO(sample["img_bytes"])).convert(
+            "L"
+        )  # Convert to PIL image
         label = sample["labels"]
 
         if self.transform:
@@ -34,13 +36,11 @@ class FER2013:
         preprocess,
         location=os.path.expanduser("~/data"),
         batch_size=128,
-        num_workers=16,
+        num_workers=6,
     ):
 
-        
-        sub_location = os.path.join(location, "FER2013")
+        # location = os.path.join("~/data", "FER2013")
 
-        # comment out training data
         # Load the FER2013 dataset using Hugging Face datasets library
         fer2013 = load_dataset("Jeneral/fer-2013", split="train")
 
@@ -56,7 +56,7 @@ class FER2013:
         )
 
         # Load the FER2013 test dataset using Hugging Face datasets library
-        fer2013_test = load_dataset("Jeneral/fer-2013", split="test", cache_dir=sub_location)
+        fer2013_test = load_dataset("Jeneral/fer-2013", split="test")
 
         # Instantiate the custom PyTorch test dataset
         self.test_dataset = CustomFER2013Dataset(fer2013_test, transform=preprocess)
@@ -67,13 +67,6 @@ class FER2013:
             batch_size=batch_size,
             shuffle=False,
             num_workers=num_workers,
-        )
-        
-        self.test_loader_shuffle = DataLoader(
-            self.test_dataset,
-            batch_size=batch_size,
-            shuffle=True,
-            num_workers=num_workers
         )
 
         self.classnames = [

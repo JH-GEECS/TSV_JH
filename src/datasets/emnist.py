@@ -10,12 +10,12 @@ class EMNIST:
         preprocess,
         location=os.path.expanduser("~/data"),
         batch_size=128,
-        num_workers=6,
+        num_workers=16,
     ):
-
-        location = os.path.join(location, "EMNIST")
+        sub_location = os.path.join(location, "EMNIST")
+        
         self.train_dataset = datasets.EMNIST(
-            root=location,
+            root=sub_location,
             download=True,
             split="digits",
             transform=preprocess,
@@ -30,7 +30,7 @@ class EMNIST:
         )
 
         self.test_dataset = datasets.EMNIST(
-            root=location,
+            root=sub_location,
             download=True,
             split="digits",
             transform=preprocess,
@@ -43,5 +43,12 @@ class EMNIST:
             shuffle=False,
             num_workers=num_workers,
         )
+        
+        self.test_loader_shuffle = torch.utils.data.DataLoader(
+            self.test_dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=num_workers
+        )
 
-        self.classnames = self.train_dataset.classes
+        self.classnames = self.test_dataset.classes

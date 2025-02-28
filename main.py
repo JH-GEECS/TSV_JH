@@ -48,6 +48,7 @@ def my_app(cfg: DictConfig) -> None:
     print("*" * 100)
     print("*" * 39, "Starting Evaluation.", "*" * 39)
     print("*" * 100)
+    # 여기서 logger function만 갈아끼우기
     additive_accuracies = perform_eval_with_merged_vector(
         cfg, task_vector_dict, eval_masks, svd_dict
     )
@@ -57,4 +58,5 @@ def my_app(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
+    # 이 부분을 hydra 구동 시에 병렬화로 변경해주기 ray로 바꿔서
     my_app()

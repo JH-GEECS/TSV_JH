@@ -66,16 +66,10 @@ def get_all_checkpoints(
     # convert dict to vector
     params = list(params.values())
 
-    try:
-        ptm_check = torch.load(
-            get_zeroshot_path(model_dir, "MNISTVal", model=config.model),
-            map_location="cpu",
-        )
-    except:
-        ptm_check = ImageEncoder(config.model).state_dict()
-        torch.save(
-            ptm_check, get_zeroshot_path(model_dir, "MNISTVal", model=config.model)
-        )
+    ptm_check = ImageEncoder(config.model).state_dict()
+    
+    if not os.path.exists(get_zeroshot_path(model_dir, None, model=config.model)):
+        torch.save(ptm_check, get_zeroshot_path(model_dir, None, model=config.model))
 
     return params, ptm_check
 
@@ -115,17 +109,12 @@ def get_all_checkpoints_TSVC(
     }
 
     # params = list(params.values())
+    # TODO [X] 여기서 zeroshot path를 받고 가져오도록 해야한다.
+    ptm_check = ImageEncoder(config.model).state_dict()
+    
+    if not os.path.exists(get_zeroshot_path(model_dir, None, model=config.model)):
+        torch.save(ptm_check, get_zeroshot_path(model_dir, None, model=config.model))
 
-    try:
-        ptm_check = torch.load(
-            get_zeroshot_path(model_dir, "MNISTVal", model=config.model),
-            map_location="cpu",
-        )
-    except:
-        ptm_check = ImageEncoder(config.model).state_dict()
-        torch.save(
-            ptm_check, get_zeroshot_path(model_dir, "MNISTVal", model=config.model)
-        )
 
     return params, ptm_check
 
@@ -144,6 +133,11 @@ def create_task_vector(
             (if applicable).
     """
 
+    # TODO: [X] weight loader 부분 갈아끼우기
+    # TODO: [x] dataloader 부분 갈아끼우기
+    # TODO: [x] LOGGER 짜서 귀찮음 이제 멈춰춰
+    # TODO: [ ] 간단하게 병렬화 코드로 구현해주기
+    # TODO: [ ] 실험 대상 (B, L) X (8, 14, 20) X 2
     if config.method.name == "TSVC":
         ft_checks, ptm_check = get_all_checkpoints_TSVC(config)
         check_parameterNamesMatch(list(ft_checks.values()) + [ptm_check])
