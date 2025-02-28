@@ -33,6 +33,8 @@ def eval_single_dataset(image_encoder, dataset_name, args):
     )
     dataloader = get_dataloader(dataset, is_train=False, args=args, image_encoder=None)
     device = args.device
+    
+    # import ipdb; ipdb.set_trace()
 
     with torch.no_grad():
         top1, correct, n = 0.0, 0.0, 0.0

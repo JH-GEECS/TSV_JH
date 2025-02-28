@@ -87,9 +87,10 @@ def get_classification_head(args: argparse.Namespace, dataset: str) -> nn.Module
 
     """
     
-    TA_mode = is_TA_mode(args, dataset)
-    dir_ret = get_dir_dict(args, TA_mode)
     _dataset = dataset[:-3] if dataset.endswith("Val") else dataset
+    # import ipdb; ipdb.set_trace()
+    TA_mode = is_TA_mode(args, _dataset)
+    dir_ret = get_dir_dict(args, TA_mode)
     
     if TA_mode:
         filename = os.path.join(
@@ -100,10 +101,17 @@ def get_classification_head(args: argparse.Namespace, dataset: str) -> nn.Module
             dir_ret["save"], f'head_{_dataset}Val.pt')
         
     if os.path.exists(filename):
-        print(
-            f"Loading classification head for {args.model} on {dataset} from {filename}"
-        )
-        return ClassificationHead.load(filename)
+        
+        if TA_mode:
+            print(
+                f'Classification head for {args.model} on {dataset} exists at {filename} with TA mode: {TA_mode}')
+            cls_head = ClassificationHead(
+                normalize=True, weights=state_dict['weight'])
+            return cls_head       
+        else:
+            print(
+            f'Classification head for {args.model} on {dataset} exists at {filename}')
+            return ClassificationHead.load(filename)
     print(
         f"Did not find classification head for {args.model} on {dataset} at {filename}, building one from scratch."
     )
