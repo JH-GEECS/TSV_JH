@@ -4,5 +4,7 @@ tsv_supmat.zip
 Task_Singular_Vectors_SupMat_Final.pdf
 media/*
 
-*.pyc
-*/__pycache__/*
+**.pyc
+
+*/__pycache__
+logs

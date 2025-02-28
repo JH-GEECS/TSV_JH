@@ -49,7 +49,7 @@ def get_all_checkpoints(
     print("datasets:", config.DATASETS_VAL)
     print("model:", config.model)
     for dataset in config.DATASETS_VAL:
-        path = get_finetuned_path(model_dir, dataset, model=config.model)
+        path = get_finetuned_path(root=model_dir, dataset=dataset, model=config.model, config=config)
         if os.path.exists(path):
             print(f"{path} exists")
         else:
@@ -94,7 +94,7 @@ def get_all_checkpoints_TSVC(
     print("datasets:", config.DATASETS_VAL)
     print("model:", config.model)
     for dataset in config.DATASETS_VAL:
-        path = get_finetuned_path(model_dir, dataset, model=config.model)
+        path = get_finetuned_path(root=model_dir, dataset=dataset, model=config.model, config=config)
         if os.path.exists(path):
             print(f"{path} exists")
         else:
